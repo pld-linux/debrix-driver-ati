@@ -1,0 +1,241 @@
+Index: atimisc/atii2c.c
+===================================================================
+RCS file: /cvs/xserver/debrix-driver-ati/atimisc/atii2c.c,v
+retrieving revision 1.3
+diff -u -r1.3 atii2c.c
+--- atimisc/atii2c.c	12 Jun 2004 15:34:25 -0000	1.3
++++ atimisc/atii2c.c	29 Jun 2004 00:18:50 -0000
+@@ -350,8 +350,8 @@
+     switch (pATI->Adapter)
+     {
+         case ATI_ADAPTER_MACH64:
+-            if (!ATILoadModule(pScreenInfo, "i2c", ATIi2cSymbols))
+-                return;
++/***            if (!ATILoadModule(pScreenInfo, "i2c", ATIi2cSymbols))
++                return;*/
+ 
+             ATIMach64I2CPreInit(pScreenInfo, pATI);
+             break;
+Index: atimisc/atiload.c
+===================================================================
+RCS file: /cvs/xserver/debrix-driver-ati/atimisc/atiload.c,v
+retrieving revision 1.3
+diff -u -r1.3 atiload.c
+--- atimisc/atiload.c	12 Jun 2004 15:34:25 -0000	1.3
++++ atimisc/atiload.c	29 Jun 2004 00:18:50 -0000
+@@ -155,14 +155,14 @@
+         return NULL;
+ 
+     /* Load XAA if needed */
+-    if (pATI->OptionAccel &&
++/***    if (pATI->OptionAccel &&
+         !ATILoadModule(pScreenInfo, "xaa", ATIxaaSymbols))
+-        return NULL;
++        return NULL;*/
+ 
+     /* Load ramdac module if needed */
+-    if ((pATI->Cursor > ATI_CURSOR_SOFTWARE) &&
++/***    if ((pATI->Cursor > ATI_CURSOR_SOFTWARE) &&
+         !ATILoadModule(pScreenInfo, "ramdac", ATIramdacSymbols))
+-        return NULL;
++        return NULL;*/
+ 
+     /* Load depth-specific entry points */
+     switch (pATI->bitsPerPixel)
+@@ -171,10 +171,10 @@
+ #ifndef AVOID_CPIO
+ 
+         case 1:
+-            return ATILoadModule(pScreenInfo, "xf1bpp", ATIxf1bppSymbols);
++            return True; /*** ATILoadModule(pScreenInfo, "xf1bpp", ATIxf1bppSymbols);*/
+ 
+         case 4:
+-            return ATILoadModule(pScreenInfo, "xf4bpp", ATIxf4bppSymbols);
++            return True; /*** ATILoadModule(pScreenInfo, "xf4bpp", ATIxf4bppSymbols);*/
+ 
+ #endif /* AVOID_CPIO */
+ 
+Index: atimisc/atipreinit.c
+===================================================================
+RCS file: /cvs/xserver/debrix-driver-ati/atimisc/atipreinit.c,v
+retrieving revision 1.3
+diff -u -r1.3 atipreinit.c
+--- atimisc/atipreinit.c	12 Jun 2004 15:34:25 -0000	1.3
++++ atimisc/atipreinit.c	29 Jun 2004 00:18:52 -0000
+@@ -604,19 +604,19 @@
+      * If there is an ix86-style BIOS, ensure its initialisation entry point
+      * has been executed, and retrieve DDC and VBE information from it.
+      */
+-    if (!(pInt10Module = ATILoadModule(pScreenInfo, "int10", ATIint10Symbols)))
++/***    if (!(pInt10Module = ATILoadModule(pScreenInfo, "int10", ATIint10Symbols)))
+     {
+         xf86DrvMsg(pScreenInfo->scrnIndex, X_WARNING,
+             "Unable to load int10 module.\n");
+     }
+-    else if (!(pInt10Info = xf86InitInt10(pATI->iEntity)))
++    else*/ if (!(pInt10Info = xf86InitInt10(pATI->iEntity)))
+     {
+         xf86DrvMsg(pScreenInfo->scrnIndex, X_WARNING,
+              "Unable to initialise int10 interface.\n");
+     }
+     else
+     {
+-        if (!(pDDCModule = ATILoadModule(pScreenInfo, "ddc", ATIddcSymbols)))
++/***        if (!(pDDCModule = ATILoadModule(pScreenInfo, "ddc", ATIddcSymbols)))
+         {
+             xf86DrvMsg(pScreenInfo->scrnIndex, X_WARNING,
+                 "Unable to load ddc module.\n");
+@@ -628,14 +628,14 @@
+                 "Unable to load vbe module.\n");
+         }
+         else
+-        {
++        {*/
+             if ((pVBE = VBEInit(pInt10Info, pATI->iEntity)))
+             {
+                 ConfiguredMonitor = vbeDoEDID(pVBE, pDDCModule);
+                 vbeFree(pVBE);
+             }
+             xf86UnloadSubModule(pVBEModule);
+-        }
++/***        }*/
+ 
+         if (!(flags & PROBE_DETECT))
+         {
+Index: radeon/radeon_driver.c
+===================================================================
+RCS file: /cvs/xserver/debrix-driver-ati/radeon/radeon_driver.c,v
+retrieving revision 1.3
+diff -u -r1.3 radeon_driver.c
+--- radeon/radeon_driver.c	12 Jun 2004 15:36:23 -0000	1.3
++++ radeon/radeon_driver.c	29 Jun 2004 00:18:56 -0000
+@@ -1261,7 +1261,7 @@
+ 	    else if((pRADEONEnt->MonType1 = RADEONDisplayDDCConnected(pScrn, DDC_VGA, &pRADEONEnt->MonInfo1)));
+ 	    else if((pRADEONEnt->MonType1 = RADEONDisplayDDCConnected(pScrn, DDC_CRT2, &pRADEONEnt->MonInfo1)));
+ 	    else if (pInt10) {
+-		if (xf86LoadSubModule(pScrn, "vbe")) {
++/***		if (xf86LoadSubModule(pScrn, "vbe")) {*/
+ 		    vbeInfoPtr  pVbe;
+ 		    pVbe = VBEInit(pInt10, info->pEnt->index);
+ 		    if (pVbe) {
+@@ -1271,7 +1271,7 @@
+ 			if (pRADEONEnt->MonInfo1->rawData[0x14] & 0x80)
+ 			    pRADEONEnt->MonType1 = MT_DFP;
+ 			else pRADEONEnt->MonType1 = MT_CRT;
+-		    }
++/***		    }*/
+ 		}
+ 	    } else
+ 		pRADEONEnt->MonType1 = MT_CRT;
+@@ -2408,20 +2408,20 @@
+ 
+     info->ddc1     = FALSE;
+     info->ddc_bios = FALSE;
+-    if (!xf86LoadSubModule(pScrn, "ddc")) {
++/***  if (!xf86LoadSubModule(pScrn, "ddc")) {
+ 	info->ddc2 = FALSE;
+-    } else {
++    } else {*/
+ 	xf86LoaderReqSymLists(ddcSymbols, NULL);
+ 	info->ddc2 = TRUE;
+-    }
++/***  }*/
+ 
+     /* DDC can use I2C bus */
+     /* Load I2C if we have the code to use it */
+     if (info->ddc2) {
+-	if (xf86LoadSubModule(pScrn, "i2c")) {
++/***	if (xf86LoadSubModule(pScrn, "i2c")) {*/
+ 	    xf86LoaderReqSymLists(i2cSymbols,NULL);
+ 	    info->ddc2 = RADEONI2cInit(pScrn);
+-	}
++/***	}*/
+ 	else info->ddc2 = FALSE;
+     }
+ }
+@@ -3694,7 +3694,7 @@
+     RADEONInfoPtr  info = RADEONPTR(pScrn);
+ 
+     if (!xf86ReturnOptValBool(info->Options, OPTION_SW_CURSOR, FALSE)) {
+-	if (!xf86LoadSubModule(pScrn, "ramdac")) return FALSE;
++/***	if (!xf86LoadSubModule(pScrn, "ramdac")) return FALSE;*/
+ 	xf86LoaderReqSymLists(ramdacSymbols, NULL);
+     }
+     return TRUE;
+@@ -3712,7 +3712,7 @@
+ 	info->xaaReq.majorversion = 1;
+ 	info->xaaReq.minorversion = 1;
+ 
+-	if (!LoadSubModule(pScrn->module, "xaa", NULL, NULL, NULL,
++/***	if (!LoadSubModule(pScrn->module, "xaa", NULL, NULL, NULL,
+ 			   &info->xaaReq, &errmaj, &errmin)) {
+ 	    info->xaaReq.minorversion = 0;
+ 
+@@ -3721,7 +3721,7 @@
+ 		LoaderErrorMsg(NULL, "xaa", errmaj, errmin);
+ 		return FALSE;
+ 	    }
+-	}
++	}*/
+ 	xf86LoaderReqSymLists(xaaSymbols, NULL);
+     }
+ #endif
+@@ -3734,11 +3734,11 @@
+     RADEONInfoPtr  info = RADEONPTR(pScrn);
+ 
+ #if !defined(__powerpc__)
+-    if (xf86LoadSubModule(pScrn, "int10")) {
++/***    if (xf86LoadSubModule(pScrn, "int10")) {*/
+ 	xf86LoaderReqSymLists(int10Symbols, NULL);
+ 	xf86DrvMsg(pScrn->scrnIndex,X_INFO,"initializing int10\n");
+ 	*ppInt10 = xf86InitInt10(info->pEnt->index);
+-    }
++/***    }*/
+ #endif
+     return TRUE;
+ }
+@@ -3890,10 +3890,10 @@
+ {
+     vbeInfoPtr  pVbe;
+ 
+-    if (xf86LoadSubModule(pScrn, "vbe")) {
++/***    if (xf86LoadSubModule(pScrn, "vbe")) {*/
+ 	pVbe = VBEInit(NULL,indx);
+ 	ConfiguredMonitor = vbeDoEDID(pVbe, NULL);
+-    }
++/***    }*/
+ }
+ 
+ /* RADEONPreInit is called once at server startup */
+@@ -3988,7 +3988,7 @@
+ 	return TRUE;
+     }
+ 
+-    if (!xf86LoadSubModule(pScrn, "vgahw")) return FALSE;
++/***    if (!xf86LoadSubModule(pScrn, "vgahw")) return FALSE;*/
+     xf86LoaderReqSymLists(vgahwSymbols, NULL);
+     if (!vgaHWGetHWRec(pScrn)) {
+ 	RADEONFreeRec(pScrn);
+@@ -4050,7 +4050,7 @@
+     if (xf86ReturnOptValBool(info->Options, OPTION_FBDEV, FALSE)) {
+ 	/* check for Linux framebuffer device */
+ 
+-	if (xf86LoadSubModule(pScrn, "fbdevhw")) {
++/***	if (xf86LoadSubModule(pScrn, "fbdevhw")) {*/
+ 	    xf86LoaderReqSymLists(fbdevHWSymbols, NULL);
+ 
+ 	    if (fbdevHWInit(pScrn, info->PciInfo, NULL)) {
+@@ -4062,11 +4062,11 @@
+ 		xf86DrvMsg(pScrn->scrnIndex, X_WARNING,
+ 			   "fbdevHWInit failed, not using framebuffer device\n");
+ 	    }
+-	} else {
++/***	} else {
+ 	    xf86DrvMsg(pScrn->scrnIndex, X_WARNING,
+ 		       "Couldn't load fbdevhw module, not using framebuffer device\n");
+ 	}
+-    }
++    }*/
+ 
+     if (!info->FBDev)
+ 	if (!RADEONPreInitInt10(pScrn, &pInt10))
