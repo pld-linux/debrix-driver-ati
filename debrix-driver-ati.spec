@@ -3,19 +3,18 @@
 # - descriptions and summaries
 # - requires/provides/obsoletes
 #
-%define		snap 20040628
+%define		snap 20040709
 #
 Summary:	debrix driver for ATI cards
 Summary(pl):	Driver debriksa dla kart ATI
 Name:		debrix-driver-ati
 Version:	0.1.0
-Release:	0.1
+Release:	0.%{snap}.1
 Epoch:		0
 License:	??
 Group:		X11/Xorg
 Source0:	%{name}-snap-%{snap}.tar.bz2
-# Source0-md5:	ea4b79c0a37565857fa980052e1b8456
-Patch0:		%{name}-modules.patch
+# Source0-md5:	57306de71e2c9899d2d10a75fe62f129
 # not really debrix URL, but there is no other...
 URL:		http://xserver.freedesktop.org
 BuildRequires:	autoconf
@@ -34,7 +33,6 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %prep
 %setup -q -n %{name}
-%patch0 -p0
 
 %build
 %{__aclocal}
