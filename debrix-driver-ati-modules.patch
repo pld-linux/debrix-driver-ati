@@ -47,11 +47,11 @@ diff -u -r1.3 atiload.c
  
          case 1:
 -            return ATILoadModule(pScreenInfo, "xf1bpp", ATIxf1bppSymbols);
-+            return True; /*** ATILoadModule(pScreenInfo, "xf1bpp", ATIxf1bppSymbols);*/
++            return TRUE; /*** ATILoadModule(pScreenInfo, "xf1bpp", ATIxf1bppSymbols);*/
  
          case 4:
 -            return ATILoadModule(pScreenInfo, "xf4bpp", ATIxf4bppSymbols);
-+            return True; /*** ATILoadModule(pScreenInfo, "xf4bpp", ATIxf4bppSymbols);*/
++            return TRUE; /*** ATILoadModule(pScreenInfo, "xf4bpp", ATIxf4bppSymbols);*/
  
  #endif /* AVOID_CPIO */
  
@@ -149,10 +149,12 @@ diff -u -r1.3 radeon_driver.c
  	    xf86LoaderReqSymLists(i2cSymbols,NULL);
  	    info->ddc2 = RADEONI2cInit(pScrn);
 -	}
-+/***	}*/
- 	else info->ddc2 = FALSE;
+-       else info->ddc2 = FALSE
++/***	}
++ 	else info->ddc2 = FALSE;*/
      }
  }
+ 
 @@ -3694,7 +3694,7 @@
      RADEONInfoPtr  info = RADEONPTR(pScrn);
  
@@ -233,9 +235,9 @@ diff -u -r1.3 radeon_driver.c
 +/***	} else {
  	    xf86DrvMsg(pScrn->scrnIndex, X_WARNING,
  		       "Couldn't load fbdevhw module, not using framebuffer device\n");
- 	}
--    }
-+    }*/
+- 	}
++       }*/
+     }
  
      if (!info->FBDev)
  	if (!RADEONPreInitInt10(pScrn, &pInt10))
