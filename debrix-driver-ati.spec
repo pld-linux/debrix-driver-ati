@@ -15,6 +15,7 @@ License:	??
 Group:		X11/Xorg
 Source0:	%{name}-snap-%{snap}.tar.bz2
 # Source0-md5:	ea4b79c0a37565857fa980052e1b8456
+Patch0:		%{name}-modules.patch
 # not really debrix URL, but there is no other...
 URL:		http://xserver.freedesktop.org
 BuildRequires:	autoconf
@@ -33,6 +34,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %prep
 %setup -q -n %{name}
+%patch0 -p0
 
 %build
 %{__aclocal}
@@ -52,7 +54,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-rm -f $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/*.{a,la,so,so.0}
+rm -f $RPM_BUILD_ROOT%{_libdir}/xorg/modules/drivers/*.{a,la}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -67,5 +69,5 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%attr(755,root,root) %{_libdir}/xorg/modules/drivers/lib*.so.*.*.*
+%attr(755,root,root) %{_libdir}/xorg/modules/drivers/lib*.so*
 %{_mandir}/man3/*
