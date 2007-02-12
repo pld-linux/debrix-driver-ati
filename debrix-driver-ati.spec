@@ -6,7 +6,7 @@
 %define		snap 20040709
 #
 Summary:	debrix driver for ATI cards
-Summary(pl.UTF-8):   Driver debriksa dla kart ATI
+Summary(pl.UTF-8):	Driver debriksa dla kart ATI
 Name:		debrix-driver-ati
 Version:	0.1.0
 Release:	0.%{snap}.1
